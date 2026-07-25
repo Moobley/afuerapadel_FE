@@ -18,7 +18,8 @@
         <span></span><span></span><span></span>
       </button>
       <nav class="header__nav" id="nav">
-        <a href="#torneo" class="header__link">Torneo</a>
+        <a href="#classifica-generale" class="header__link">Classifica Generale</a>
+        <a href="#tornei" class="header__link">Tornei</a>
         <a href="#contatti" class="header__link">Contatti</a>
       </nav>
     </div>
@@ -37,25 +38,55 @@
       </div>
     </section>
 
-    <section class="torneo" id="torneo">
+    <section class="classifica-generale" id="classifica-generale">
       <div class="container">
-        <h2 class="section-title">Torneo</h2>
-        <p class="torneo__desc">
-          Benvenuto al Torneo Afuera Padel. Qui trovi la classifica finale
-          con tutte le posizioni, i giocatori e i punteggi assegnati.
+        <h2 class="section-title">Classifica Generale</h2>
+        <p class="section-desc">
+          Classifica complessiva di tutti i tornei. I punti di ogni partecipante
+          vengono sommati attraverso le varie edizioni.
         </p>
-        <div class="table-wrapper" id="table-wrapper">
-          <table class="standings" id="standings">
+        <div class="table-wrapper">
+          <table class="standings" id="general-standings">
+            <thead>
+              <tr>
+                <th>Posizione</th>
+                <th>Giocatore</th>
+                <th>Punteggio Totale</th>
+              </tr>
+            </thead>
+            <tbody id="general-standings-body">
+              <tr><td colspan="3">Caricamento classifica generale…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tornei" id="tornei">
+      <div class="container">
+        <h2 class="section-title">Tornei</h2>
+        <p class="section-desc">Seleziona uno o più tornei per visualizzare la classifica.</p>
+        <div class="tornei-selector" id="tornei-selector">
+          <button class="tornei-selector__toggle" id="tornei-toggle">
+            Seleziona tornei
+          </button>
+          <div class="tornei-selector__dropdown" id="tornei-dropdown">
+            <!-- Checkboxes rendered by JS -->
+          </div>
+        </div>
+        <div class="table-wrapper" id="tornei-table-wrapper" style="display:none">
+          <table class="standings" id="tornei-standings">
             <thead>
               <tr>
                 <th>Posizione</th>
                 <th>Giocatore 1</th>
                 <th>Giocatore 2</th>
                 <th>Punteggio</th>
+                <th class="torneo-col">Torneo</th>
               </tr>
             </thead>
-            <tbody id="standings-body">
-              <tr><td colspan="4">Caricamento dati in corso…</td></tr>
+            <tbody id="tornei-standings-body">
+              <tr><td colspan="5" id="tornei-empty-msg">Seleziona uno o più tornei per visualizzare la classifica.</td></tr>
             </tbody>
           </table>
         </div>
