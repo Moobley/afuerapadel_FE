@@ -223,14 +223,17 @@ body {
 /* --- Standings Table --- */
 .table-wrapper {
   overflow-x: auto;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
 }
 
 .standings {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 14px;
+  overflow: hidden;
 }
 
 .standings thead {
@@ -240,32 +243,61 @@ body {
 }
 
 .standings th {
-  padding: 14px 16px;
+  padding: 16px 20px;
   text-align: left;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   white-space: nowrap;
+  color: #fff;
+}
+
+.standings th:first-child {
+  border-radius: 0;
 }
 
 .standings td {
-  padding: 12px 16px;
+  padding: 14px 20px;
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
 
 .standings tbody tr {
-  background: #231F1E;
+  background: #1A1817;
   transition: background 0.15s;
 }
 
 .standings tbody tr:nth-child(even) {
-  background: #2A2625;
+  background: #231F1E;
 }
 
 .standings tbody tr:hover {
-  background: rgba(245, 90, 34, 0.12);
+  background: rgba(245, 90, 34, 0.1);
 }
 
 .standings tbody tr.is-top {
   border-left: 3px solid #F55A22;
+}
+
+.standings tbody tr.is-champion {
+  background: linear-gradient(90deg, rgba(245, 90, 34, 0.25), rgba(245, 90, 34, 0.05));
+  border-left: 3px solid #F55A22;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.standings tbody tr.is-champion td:first-child {
+  color: #F55A22;
+  font-weight: 700;
+}
+
+.standings tbody tr.is-champion td:nth-child(2) {
+  color: #F55A22;
+}
+
+.standings td:first-child {
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
 }
 
 @media (max-width: 768px) {
