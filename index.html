@@ -12,7 +12,7 @@
   <header class="header">
     <div class="header__inner container">
       <a href="#" class="header__logo">
-        <img src="assets/img/logo.jpg" alt="Afuera Padel" class="header__logo-img">
+        <img src="assets/img/logo_without_bg.png" alt="Afuera Padel" class="header__logo-img">
       </a>
       <button class="header__hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -29,11 +29,11 @@
     <section class="hero" id="hero">
       <div class="hero__inner container">
         <div class="hero__logo-col">
-          <img src="assets/img/logo.jpg" alt="Afuera Padel" class="hero__logo">
+          <img src="assets/img/logo_without_bg.png" alt="Afuera Padel" class="hero__logo">
         </div>
         <div class="hero__diagonal" aria-hidden="true"></div>
         <div class="hero__text-col">
-          <h1 class="hero__title">Afuera Padel<br><span class="hero__sub">Dove ogni colpo conta</span></h1>
+          <h1 class="hero__title">AFUERA<br><span class="hero__sub">enjoy your club</span></h1>
         </div>
       </div>
     </section>
@@ -45,6 +45,7 @@
           Classifica complessiva di tutti i tornei. I punti di ogni partecipante
           vengono sommati attraverso le varie edizioni.
         </p>
+        <input type="text" class="search-input" id="search-general" placeholder="Cerca giocatore…">
         <div class="table-wrapper">
           <table class="standings" id="general-standings">
             <thead>
@@ -74,7 +75,8 @@
             <!-- Checkboxes rendered by JS -->
           </div>
         </div>
-        <div class="table-wrapper" id="tornei-table-wrapper" style="display:none">
+        <input type="text" class="search-input" id="search-tornei" placeholder="Cerca giocatore…" style="display:none">
+    <div class="table-wrapper" id="tornei-table-wrapper" style="display:none">
           <table class="standings" id="tornei-standings">
             <thead>
               <tr>

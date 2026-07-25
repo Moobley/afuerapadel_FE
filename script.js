@@ -18,6 +18,36 @@
     });
   });
 
+  // --- Search ---
+  var searchGeneral = document.getElementById('search-general');
+  var searchTornei = document.getElementById('search-tornei');
+
+  searchGeneral.addEventListener('input', function () {
+    filterTable('general-standings-body', this.value, [1]);
+  });
+
+  searchTornei.addEventListener('input', function () {
+    filterTable('tornei-standings-body', this.value, [1, 2]);
+  });
+
+  function filterTable(tbodyId, query, cols) {
+    var tbody = document.getElementById(tbodyId);
+    var rows = tbody.querySelectorAll('tr');
+    var q = query.toLowerCase().trim();
+    rows.forEach(function (row) {
+      if (row.querySelector('td[colspan]')) return;
+      var match = false;
+      for (var i = 0; i < cols.length; i++) {
+        var cell = row.children[cols[i]];
+        if (cell && cell.textContent.toLowerCase().indexOf(q) !== -1) {
+          match = true;
+          break;
+        }
+      }
+      row.style.display = (!q || match) ? '' : 'none';
+    });
+  }
+
   // --- Multi-select dropdown toggle ---
   var toggleBtn = document.getElementById('tornei-toggle');
 
@@ -168,6 +198,9 @@
 
     // Always show the table wrapper so thead is visible
     wrapper.style.display = '';
+    searchTornei.style.display = selected.length > 0 ? '' : 'none';
+
+    searchTornei.value = '';
 
     if (selected.length === 0) {
       tbody.innerHTML = '<tr><td colspan="5">Seleziona uno o più tornei per visualizzare la classifica.</td></tr>';
