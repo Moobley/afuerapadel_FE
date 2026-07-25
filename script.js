@@ -2,14 +2,17 @@
   var MANIFEST_URL = 'assets/tornei_json/manifest.json';
   var allData = {};
 
-  // --- Header logo visibility ---
-  var headerLogo = document.querySelector('.header__logo');
+  // --- Header & decorations visibility ---
+  var header = document.querySelector('.header');
   var heroSection = document.getElementById('hero');
+  var contentWrapper = document.querySelector('.content-wrapper');
 
   function updateHeaderLogo() {
     var rect = heroSection.getBoundingClientRect();
-    headerLogo.style.opacity = rect.bottom <= 0 ? '1' : '0';
-    headerLogo.style.pointerEvents = rect.bottom <= 0 ? 'auto' : 'none';
+    var pastHero = rect.bottom <= 0;
+    header.style.opacity = pastHero ? '1' : '0';
+    header.style.pointerEvents = pastHero ? 'auto' : 'none';
+    contentWrapper.classList.toggle('content-wrapper--scrolled', pastHero);
   }
 
   window.addEventListener('scroll', updateHeaderLogo);

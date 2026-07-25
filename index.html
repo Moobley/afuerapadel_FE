@@ -39,76 +39,78 @@
       </div>
     </section>
 
-    <section class="classifica-generale" id="classifica-generale">
-      <div class="container">
-        <h2 class="section-title">RANKING-AFUERA PADEL INDOOR</h2>
-        <p class="section-desc">
-          Classifica complessiva di tutti i tornei. I punti di ogni partecipante
-          vengono sommati attraverso le varie edizioni.
-        </p>
-        <input type="text" class="search-input" id="search-general" placeholder="Cerca giocatore…">
-        <div class="table-wrapper">
-          <table class="standings" id="general-standings">
-            <thead>
-              <tr>
-                <th>Posizione</th>
-                <th>Giocatore</th>
-                <th>Punteggio Totale</th>
-              </tr>
-            </thead>
-            <tbody id="general-standings-body">
-              <tr><td colspan="3">Caricamento classifica generale…</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section class="tornei" id="tornei">
-      <div class="container">
-        <h2 class="section-title">Tornei</h2>
-        <p class="section-desc">Seleziona uno o più tornei per visualizzare la classifica.</p>
-        <div class="tornei-selector" id="tornei-selector">
-          <button class="tornei-selector__toggle" id="tornei-toggle">
-            Seleziona tornei
-          </button>
-          <div class="tornei-selector__dropdown" id="tornei-dropdown">
-            <!-- Checkboxes rendered by JS -->
+    <div class="content-wrapper">
+      <section class="classifica-generale" id="classifica-generale">
+        <div class="container">
+          <h2 class="section-title">RANKING-AFUERA PADEL INDOOR</h2>
+          <p class="section-desc">
+            Classifica complessiva di tutti i tornei. I punti di ogni partecipante
+            vengono sommati attraverso le varie edizioni.
+          </p>
+          <input type="text" class="search-input" id="search-general" placeholder="Cerca giocatore…">
+          <div class="table-wrapper">
+            <table class="standings" id="general-standings">
+              <thead>
+                <tr>
+                  <th>Posizione</th>
+                  <th>Giocatore</th>
+                  <th>Punteggio Totale</th>
+                </tr>
+              </thead>
+              <tbody id="general-standings-body">
+                <tr><td colspan="3">Caricamento classifica generale…</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        <input type="text" class="search-input" id="search-tornei" placeholder="Cerca giocatore…" style="display:none">
-    <div class="table-wrapper" id="tornei-table-wrapper" style="display:none">
-      <table class="standings" id="tornei-standings">
-        <thead>
-          <tr>
-            <th>Posizione</th>
-            <th>Giocatore</th>
-            <th>Punteggio Totale</th>
-          </tr>
-        </thead>
-        <tbody id="tornei-standings-body">
-          <tr><td colspan="3">Seleziona uno o più tornei per visualizzare la classifica.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="top5" id="top5">
-      <div class="container">
-        <h2 class="section-title">Top 4 per torneo</h2>
-        <p class="section-desc">Le prime 4 squadre classificate per ogni torneo selezionato.</p>
-        <div class="tornei-selector" id="top5-selector">
-          <button class="tornei-selector__toggle" id="top5-toggle">
-            Seleziona tornei
-          </button>
-          <div class="tornei-selector__dropdown" id="top5-dropdown">
-            <!-- Checkboxes rendered by JS -->
+      <section class="tornei" id="tornei">
+        <div class="container">
+          <h2 class="section-title">Tornei</h2>
+          <p class="section-desc">Seleziona uno o più tornei per visualizzare la classifica.</p>
+          <div class="tornei-selector" id="tornei-selector">
+            <button class="tornei-selector__toggle" id="tornei-toggle">
+              Seleziona tornei
+            </button>
+            <div class="tornei-selector__dropdown" id="tornei-dropdown">
+              <!-- Checkboxes rendered by JS -->
+            </div>
+          </div>
+          <input type="text" class="search-input" id="search-tornei" placeholder="Cerca giocatore…" style="display:none">
+          <div class="table-wrapper" id="tornei-table-wrapper" style="display:none">
+            <table class="standings" id="tornei-standings">
+              <thead>
+                <tr>
+                  <th>Posizione</th>
+                  <th>Giocatore</th>
+                  <th>Punteggio Totale</th>
+                </tr>
+              </thead>
+              <tbody id="tornei-standings-body">
+                <tr><td colspan="3">Seleziona uno o più tornei per visualizzare la classifica.</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        <div id="top5-cards"></div>
-      </div>
-    </section>
+      </section>
+
+      <section class="top5" id="top5">
+        <div class="container">
+          <h2 class="section-title">Top 4 per torneo</h2>
+          <p class="section-desc">Le prime 4 squadre classificate per ogni torneo selezionato.</p>
+          <div class="tornei-selector" id="top5-selector">
+            <button class="tornei-selector__toggle" id="top5-toggle">
+              Seleziona tornei
+            </button>
+            <div class="tornei-selector__dropdown" id="top5-dropdown">
+              <!-- Checkboxes rendered by JS -->
+            </div>
+          </div>
+          <div id="top5-cards"></div>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer class="footer" id="contatti">
