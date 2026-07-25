@@ -8,8 +8,15 @@ html {
   scroll-behavior: smooth;
 }
 
+@font-face {
+  font-family: 'MyriadPro-Regular';
+  src: url('assets/font/MyriadPro-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'MyriadPro-Regular', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: #231F1E;
   color: #fff;
   line-height: 1.6;
@@ -33,8 +40,14 @@ body {
 .header__inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   height: 64px;
+  position: relative;
+}
+
+.header__logo {
+  position: absolute;
+  left: 0;
 }
 
 .header__logo-img {
@@ -68,6 +81,8 @@ body {
   border: none;
   cursor: pointer;
   padding: 4px;
+  position: absolute;
+  right: 0;
 }
 
 .header__hamburger span {
@@ -136,7 +151,7 @@ body {
 }
 
 .hero__logo {
-  max-width: 260px;
+  max-width: 364px;
   height: auto;
   opacity: 0;
   animation: fadeIn 0.8s ease forwards;
@@ -189,7 +204,7 @@ body {
   }
 
   .hero__logo {
-    max-width: 160px;
+    max-width: 224px;
   }
 
   .hero__title {
