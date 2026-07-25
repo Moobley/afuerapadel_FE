@@ -57,9 +57,11 @@
     dd.classList.toggle('tornei-selector__dropdown--open');
   });
 
-  document.addEventListener('click', function () {
+  document.addEventListener('click', function (e) {
     var dd = document.getElementById('tornei-dropdown');
-    dd.classList.remove('tornei-selector__dropdown--open');
+    if (!dd.contains(e.target) && e.target !== toggleBtn) {
+      dd.classList.remove('tornei-selector__dropdown--open');
+    }
   });
 
   // --- Load manifest ---

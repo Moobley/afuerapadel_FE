@@ -411,11 +411,13 @@ body {
 }
 
 .tornei-selector__item {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 10px 16px;
   font-size: 14px;
   cursor: pointer;
   transition: background 0.15s;
+  gap: 10px;
 }
 
 .tornei-selector__item:hover {
@@ -423,8 +425,37 @@ body {
 }
 
 .tornei-selector__checkbox {
-  margin-right: 8px;
-  accent-color: #F55A22;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.tornei-selector__checkbox:checked {
+  background: #F55A22;
+  border-color: #F55A22;
+}
+
+.tornei-selector__checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0;
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.tornei-selector__checkbox:hover {
+  border-color: #F55A22;
 }
 
 .torneo-col {
