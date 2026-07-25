@@ -1,0 +1,382 @@
+{
+"TABELLONE FINALE":[
+ {
+  "POSIZIONE": "VINCITORE - 1° POSTO",
+  "Giocatore 1": "CACCA",
+  "Giocatore 2": "PIPI",
+  "Punteggio assegnato": 100
+ },
+ {
+  "POSIZIONE": "FINALISTA - 2° POSTO",
+  "Giocatore 1": "PIPPO",
+  "Giocatore 2": "FRANCO",
+  "Punteggio assegnato": 97
+ },
+ {
+  "POSIZIONE": "SEMIFINALISTA - 3° POSTO",
+  "Giocatore 1": "ALESSANDRO",
+  "Giocatore 2": "ILARIA",
+  "Punteggio assegnato": 90
+ },
+ {
+  "POSIZIONE": "SEMIFINALISTA - 4° POSTO",
+  "Giocatore 1": "LORENZO",
+  "Giocatore 2": "GAIA",
+  "Punteggio assegnato": 88
+ },
+ {
+  "POSIZIONE": "USCITI AI QUARTI DI FINALE",
+  "Giocatore 1": "GIORGIA",
+  "Giocatore 2": "ANNA",
+  "Punteggio assegnato": 85
+ },
+ {
+  "POSIZIONE": "USCITI AI QUARTI DI FINALE",
+  "Giocatore 1": "VALERIO",
+  "Giocatore 2": "EMMA",
+  "Punteggio assegnato": 85
+ },
+ {
+  "POSIZIONE": "USCITI AI QUARTI DI FINALE",
+  "Giocatore 1": "SIMONE",
+  "Giocatore 2": "CHIARA",
+  "Punteggio assegnato": 85
+ },
+ {
+  "POSIZIONE": "USCITI AI QUARTI DI FINALE",
+  "Giocatore 1": "ROBERTO",
+  "Giocatore 2": "ALICE",
+  "Punteggio assegnato": 85
+ },
+ {
+  "POSIZIONE": "USCITI AGLI OTTAVI DI FINALE",
+  "Giocatore 1": "NICOLA",
+  "Giocatore 2": "VALENTINA",
+  "Punteggio assegnato": 82
+ },
+ {
+  "POSIZIONE": "USCITI AGLI OTTAVI DI FINALE",
+  "Giocatore 1": "DAVIDE",
+  "Giocatore 2": "ELENA",
+  "Punteggio assegnato": 82
+ },
+ {
+  "POSIZIONE": "USCITI AGLI OTTAVI DI FINALE",
+  "Giocatore 1": "FEDERICO",
+  "Giocatore 2": "MARTINA",
+  "Punteggio assegnato": 82
+ },
+ {
+  "POSIZIONE": "USCITI AGLI OTTAVI DI FINALE",
+  "Giocatore 1": "RICCARDO",
+  "Giocatore 2": "FEDERICA",
+  "Punteggio assegnato": 82
+ },
+ {
+  "POSIZIONE": "USCITI AGLI OTTAVI DI FINALE",
+  "Giocatore 1": "DANIELE",
+  "Giocatore 2": "CAMILLA",
+  "Punteggio assegnato": 82
+ },
+ {
+  "POSIZIONE": "USCITI AGLI OTTAVI DI FINALE",
+  "Giocatore 1": "MATTEO",
+  "Giocatore 2": "SARA",
+  "Punteggio assegnato": 82
+ },
+ {
+  "POSIZIONE": "USCITI AGLI OTTAVI DI FINALE",
+  "Giocatore 1": "FRANCESCO",
+  "Giocatore 2": "AURORA",
+  "Punteggio assegnato": 82
+ },
+ {
+  "POSIZIONE": "USCITI AGLI OTTAVI DI FINALE",
+  "Giocatore 1": "PAOLO",
+  "Giocatore 2": "BEATRICE",
+  "Punteggio assegnato": 82
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "ANTONIO",
+  "Giocatore 2": "RAFFAELE",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "STEFANO",
+  "Giocatore 2": "GIADA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "GABRIELE",
+  "Giocatore 2": "SERENA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "FABIO",
+  "Giocatore 2": "PAOLA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "LUIGI",
+  "Giocatore 2": "LUDOVICA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "GIUSEPPE",
+  "Giocatore 2": "GIULIA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "MASSIMO",
+  "Giocatore 2": "MARGHERITA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "ALBERTO",
+  "Giocatore 2": "VERONICA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "ALESSIO",
+  "Giocatore 2": "IRENE",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "PIETRO",
+  "Giocatore 2": "MARTINA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "MAURIZIO",
+  "Giocatore 2": "GINEVRA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "SALVATORE",
+  "Giocatore 2": "MANUELA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "EMANUELE",
+  "Giocatore 2": "CATERINA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "CLAUDIO",
+  "Giocatore 2": "SILVIA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "USCITI AI SEDICESIMI DI FINALE",
+  "Giocatore 1": "FABRIZIO",
+  "Giocatore 2": "GIULIANA",
+  "Punteggio assegnato": 78
+ },
+ {
+  "POSIZIONE": "33° POSTO",
+  "Giocatore 1": "VINCENZO",
+  "Giocatore 2": "MARINA",
+  "Punteggio assegnato": 74
+ },
+ {
+  "POSIZIONE": "34° POSTO",
+  "Giocatore 1": "ENRICO",
+  "Giocatore 2": "ROBERTA",
+  "Punteggio assegnato": 73
+ },
+ {
+  "POSIZIONE": "35° POSTO",
+  "Giocatore 1": "WALTER",
+  "Giocatore 2": "LAURA",
+  "Punteggio assegnato": 72
+ },
+ {
+  "POSIZIONE": "36° POSTO",
+  "Giocatore 1": "GIOVANNI",
+  "Giocatore 2": "SIMONA",
+  "Punteggio assegnato": 71
+ },
+ {
+  "POSIZIONE": "37° POSTO",
+  "Giocatore 1": "ADRIANO",
+  "Giocatore 2": "DONATELLA",
+  "Punteggio assegnato": 70
+ },
+ {
+  "POSIZIONE": "38° POSTO",
+  "Giocatore 1": "ANDREA",
+  "Giocatore 2": "SOFIA",
+  "Punteggio assegnato": 69
+ },
+ {
+  "POSIZIONE": "39° POSTO",
+  "Giocatore 1": "MASSIMILIANO",
+  "Giocatore 2": "ELISABETTA",
+  "Punteggio assegnato": 68
+ },
+ {
+  "POSIZIONE": "40° POSTO",
+  "Giocatore 1": "CESARE",
+  "Giocatore 2": "FLAVIA",
+  "Punteggio assegnato": 67
+ },
+ {
+  "POSIZIONE": "41° POSTO",
+  "Giocatore 1": "TIZIANO",
+  "Giocatore 2": "PATRIZIA",
+  "Punteggio assegnato": 66
+ },
+ {
+  "POSIZIONE": "42° POSTO",
+  "Giocatore 1": "GIANLUCA",
+  "Giocatore 2": "GIULIA",
+  "Punteggio assegnato": 65
+ },
+ {
+  "POSIZIONE": "43° POSTO",
+  "Giocatore 1": "REMIGIO",
+  "Giocatore 2": "VITTORIA",
+  "Punteggio assegnato": 64
+ },
+ {
+  "POSIZIONE": "44° POSTO",
+  "Giocatore 1": "OLIVIERO",
+  "Giocatore 2": "ORNELLA",
+  "Punteggio assegnato": 63
+ },
+ {
+  "POSIZIONE": "45° POSTO",
+  "Giocatore 1": "RAFFAELLO",
+  "Giocatore 2": "TIZIANA",
+  "Punteggio assegnato": 62
+ },
+ {
+  "POSIZIONE": "46° POSTO",
+  "Giocatore 1": "ROMANO",
+  "Giocatore 2": "CINZIA",
+  "Punteggio assegnato": 61
+ },
+ {
+  "POSIZIONE": "47° POSTO",
+  "Giocatore 1": "GILBERTO",
+  "Giocatore 2": "IVANA",
+  "Punteggio assegnato": 60
+ },
+ {
+  "POSIZIONE": "48° POSTO",
+  "Giocatore 1": "ARNALDO",
+  "Giocatore 2": "NIVES",
+  "Punteggio assegnato": 59
+ },
+ {
+  "POSIZIONE": "49° POSTO",
+  "Giocatore 1": "GASPARE",
+  "Giocatore 2": "LUCILLA",
+  "Punteggio assegnato": 58
+ },
+ {
+  "POSIZIONE": "50° POSTO",
+  "Giocatore 1": "IVAN",
+  "Giocatore 2": "RITA",
+  "Punteggio assegnato": 57
+ },
+ {
+  "POSIZIONE": "51° POSTO",
+  "Giocatore 1": "OTTAVIO",
+  "Giocatore 2": "SANDRA",
+  "Punteggio assegnato": 56
+ },
+ {
+  "POSIZIONE": "52° POSTO",
+  "Giocatore 1": "AUGUSTO",
+  "Giocatore 2": "MARISA",
+  "Punteggio assegnato": 55
+ },
+ {
+  "POSIZIONE": "53° POSTO",
+  "Giocatore 1": "ARMANDO",
+  "Giocatore 2": "CARMELA",
+  "Punteggio assegnato": 54
+ },
+ {
+  "POSIZIONE": "54° POSTO",
+  "Giocatore 1": "BENEDETTO",
+  "Giocatore 2": "SILVANA",
+  "Punteggio assegnato": 53
+ },
+ {
+  "POSIZIONE": "55° POSTO",
+  "Giocatore 1": "CORNELIO",
+  "Giocatore 2": "ANTONELLA",
+  "Punteggio assegnato": 52
+ },
+ {
+  "POSIZIONE": "56° POSTO",
+  "Giocatore 1": "FLAVIO",
+  "Giocatore 2": "ROSSELLA",
+  "Punteggio assegnato": 51
+ },
+ {
+  "POSIZIONE": "57° POSTO",
+  "Giocatore 1": "ODOARDO",
+  "Giocatore 2": "PAMELA",
+  "Punteggio assegnato": 50
+ },
+ {
+  "POSIZIONE": "58° POSTO",
+  "Giocatore 1": "SILVIO",
+  "Giocatore 2": "CECILIA",
+  "Punteggio assegnato": 49
+ },
+ {
+  "POSIZIONE": "59° POSTO",
+  "Giocatore 1": "TEODORO",
+  "Giocatore 2": "ANNALISA",
+  "Punteggio assegnato": 48
+ },
+ {
+  "POSIZIONE": "60° POSTO",
+  "Giocatore 1": "UMBERTO",
+  "Giocatore 2": "DANIELA",
+  "Punteggio assegnato": 47
+ },
+ {
+  "POSIZIONE": "61° POSTO",
+  "Giocatore 1": "ACHILLE",
+  "Giocatore 2": "LOREDANA",
+  "Punteggio assegnato": 46
+ },
+ {
+  "POSIZIONE": "62° POSTO",
+  "Giocatore 1": "FELICE",
+  "Giocatore 2": "NORMA",
+  "Punteggio assegnato": 45
+ },
+ {
+  "POSIZIONE": "63° POSTO",
+  "Giocatore 1": "ORAZIO",
+  "Giocatore 2": "ALBA",
+  "Punteggio assegnato": 44
+ },
+ {
+  "POSIZIONE": "64° POSTO",
+  "Giocatore 1": "DAMIANO",
+  "Giocatore 2": "LIA",
+  "Punteggio assegnato": 43
+ }
+]
+}
