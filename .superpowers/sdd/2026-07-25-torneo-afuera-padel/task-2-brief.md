@@ -1,3 +1,15 @@
+### Task 2: Create style.css
+
+**Files:**
+- Create: `style.css`
+
+**Interfaces:**
+- Consumes: HTML class/id selectors from Task 1
+- Produces: full visual presentation
+
+- [ ] **Step 1: Write style.css**
+
+```css
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -91,13 +103,11 @@ body {
     padding: 0;
     max-height: 0;
     overflow: hidden;
-    visibility: hidden;
     transition: max-height 0.3s ease;
   }
 
   .header__nav--open {
     max-height: 200px;
-    visibility: visible;
   }
 
   .header__link {
@@ -236,7 +246,7 @@ body {
 .standings thead {
   background: #F55A22;
   position: sticky;
-  top: 64px;
+  top: 0;
 }
 
 .standings th {
@@ -334,3 +344,15 @@ body {
   border-top: 1px solid rgba(255,255,255,0.06);
   padding-top: 24px;
 }
+```
+
+- [ ] **Step 2: Verify styling**
+
+Open `index.html` in browser. Expected: full layout visible — dark background, sticky header, hero with logo + diagonal + tagline, torneo section, footer contacts. Hamburger hidden on desktop.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add style.css
+git commit -m "feat: add styles with responsive layout"
+```

@@ -1,3 +1,15 @@
+### Task 1: Create index.html
+
+**Files:**
+- Create: `index.html`
+
+**Interfaces:**
+- Consumes: nothing
+- Produces: HTML skeleton that `style.css` and `script.js` hook into via class/id selectors
+
+- [ ] **Step 1: Write index.html**
+
+```html
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -14,7 +26,7 @@
       <a href="#" class="header__logo">
         <img src="assets/logo.jpg" alt="Afuera Padel" class="header__logo-img">
       </a>
-      <button class="header__hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+      <button class="header__hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
       <nav class="header__nav" id="nav">
@@ -91,3 +103,15 @@
   <script src="script.js"></script>
 </body>
 </html>
+```
+
+- [ ] **Step 2: Verify HTML validity**
+
+Open `index.html` in browser. Expected: blank page (no CSS/JS yet) with raw unstyled content visible. No console errors.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "feat: add HTML structure for torneo page"
+```

@@ -1,20 +1,31 @@
+### Task 3: Create script.js
+
+**Files:**
+- Create: `script.js`
+
+**Interfaces:**
+- Consumes: `assets/RISULTATO TORNEO.json` (existing)
+- Produces: rendered table rows in `#standings-body`
+
+- [ ] **Step 1: Write script.js**
+
+```javascript
 (function () {
   const STANDINGS_URL = 'assets/RISULTATO TORNEO.json';
+  const TOP_POSITIONS = ['VINCITORE', 'FINALISTA', 'SEMIFINALISTA'];
 
   // --- Mobile hamburger ---
   const hamburger = document.getElementById('hamburger');
   const nav = document.getElementById('nav');
 
   hamburger.addEventListener('click', function () {
-    var isOpen = nav.classList.toggle('header__nav--open');
-    hamburger.setAttribute('aria-expanded', isOpen);
+    nav.classList.toggle('header__nav--open');
   });
 
   // Close nav on link click
   nav.querySelectorAll('.header__link').forEach(function (link) {
     link.addEventListener('click', function () {
       nav.classList.remove('header__nav--open');
-      hamburger.setAttribute('aria-expanded', 'false');
     });
   });
 
@@ -40,6 +51,7 @@
 
   function renderTable(rows) {
     var html = '';
+    var isFirst = true;
     var topCount = 0;
 
     for (var i = 0; i < rows.length; i++) {
@@ -61,7 +73,7 @@
         + '<td>' + escapeHtml(pos) + '</td>'
         + '<td>' + escapeHtml(g1) + '</td>'
         + '<td>' + escapeHtml(g2) + '</td>'
-        + '<td>' + escapeHtml(String(score)) + '</td>'
+        + '<td>' + score + '</td>'
         + '</tr>';
     }
 
@@ -75,3 +87,17 @@
     return div.innerHTML;
   }
 })();
+```
+
+- [ ] **Step 2: Verify functionality**
+
+Open `index.html` via a local server (since `fetch` requires HTTP). Expected: standings table populated with data from JSON. Top 4 rows have orange left border. Hamburger toggles nav on mobile width.
+
+If you don't have a local server, use: `npx serve .` (from project root, requires Node.js)
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add script.js
+git commit -m "feat: add JS for data loading, table rendering, and nav"
+```
