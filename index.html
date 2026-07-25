@@ -20,6 +20,7 @@
       <nav class="header__nav" id="nav">
         <a href="#classifica-generale" class="header__link">Classifica Generale</a>
         <a href="#tornei" class="header__link">Tornei</a>
+        <a href="#top5" class="header__link">Top 4</a>
         <a href="#contatti" class="header__link">Contatti</a>
       </nav>
     </div>
@@ -77,21 +78,35 @@
         </div>
         <input type="text" class="search-input" id="search-tornei" placeholder="Cerca giocatore…" style="display:none">
     <div class="table-wrapper" id="tornei-table-wrapper" style="display:none">
-          <table class="standings" id="tornei-standings">
-            <thead>
-              <tr>
-                <th>Posizione</th>
-                <th>Giocatore 1</th>
-                <th>Giocatore 2</th>
-                <th>Punteggio</th>
-                <th class="torneo-col">Torneo</th>
-              </tr>
-            </thead>
-            <tbody id="tornei-standings-body">
-              <tr><td colspan="5" id="tornei-empty-msg">Seleziona uno o più tornei per visualizzare la classifica.</td></tr>
+      <table class="standings" id="tornei-standings">
+        <thead>
+          <tr>
+            <th>Posizione</th>
+            <th>Giocatore</th>
+            <th>Punteggio Totale</th>
+          </tr>
+        </thead>
+        <tbody id="tornei-standings-body">
+          <tr><td colspan="3">Seleziona uno o più tornei per visualizzare la classifica.</td></tr>
             </tbody>
           </table>
         </div>
+      </div>
+    </section>
+
+    <section class="top5" id="top5">
+      <div class="container">
+        <h2 class="section-title">Top 4 per torneo</h2>
+        <p class="section-desc">Le prime 4 squadre classificate per ogni torneo selezionato.</p>
+        <div class="tornei-selector" id="top5-selector">
+          <button class="tornei-selector__toggle" id="top5-toggle">
+            Seleziona tornei
+          </button>
+          <div class="tornei-selector__dropdown" id="top5-dropdown">
+            <!-- Checkboxes rendered by JS -->
+          </div>
+        </div>
+        <div id="top5-cards"></div>
       </div>
     </section>
   </main>
@@ -101,7 +116,7 @@
       <div class="footer__grid">
         <div class="footer__item">
           <span class="footer__icon">✉️</span>
-          <a href="mailto:afuerapadelclub@gmail.com" class="footer__link">afuerapadelclub@gmail.com</a>
+          <a href="mailto:virtusacerra@gmail.com" class="footer__link">virtusacerra@gmail.com</a>
         </div>
         <div class="footer__item">
           <span class="footer__icon">📞</span>

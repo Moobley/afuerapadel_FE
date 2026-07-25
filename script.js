@@ -2,6 +2,20 @@
   var MANIFEST_URL = 'assets/tornei_json/manifest.json';
   var allData = {};
 
+  // --- Header logo visibility ---
+  var headerLogo = document.querySelector('.header__logo');
+  var heroSection = document.getElementById('hero');
+
+  function updateHeaderLogo() {
+    var rect = heroSection.getBoundingClientRect();
+    headerLogo.style.opacity = rect.bottom <= 0 ? '1' : '0';
+    headerLogo.style.pointerEvents = rect.bottom <= 0 ? 'auto' : 'none';
+  }
+
+  window.addEventListener('scroll', updateHeaderLogo);
+  window.addEventListener('resize', updateHeaderLogo);
+  updateHeaderLogo();
+
   // --- Mobile hamburger ---
   var hamburger = document.getElementById('hamburger');
   var nav = document.getElementById('nav');
@@ -27,7 +41,7 @@
   });
 
   searchTornei.addEventListener('input', function () {
-    filterTable('tornei-standings-body', this.value, [1, 2]);
+    filterTable('tornei-standings-body', this.value, [1]);
   });
 
   function filterTable(tbodyId, query, cols) {
@@ -49,20 +63,24 @@
   }
 
   // --- Multi-select dropdown toggle ---
-  var toggleBtn = document.getElementById('tornei-toggle');
+  function setupDropdown(toggleId, dropdownId) {
+    var toggleBtn = document.getElementById(toggleId);
+    var dd = document.getElementById(dropdownId);
 
-  toggleBtn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    var dd = document.getElementById('tornei-dropdown');
-    dd.classList.toggle('tornei-selector__dropdown--open');
-  });
+    toggleBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      dd.classList.toggle('tornei-selector__dropdown--open');
+    });
 
-  document.addEventListener('click', function (e) {
-    var dd = document.getElementById('tornei-dropdown');
-    if (!dd.contains(e.target) && e.target !== toggleBtn) {
-      dd.classList.remove('tornei-selector__dropdown--open');
-    }
-  });
+    document.addEventListener('click', function (e) {
+      if (!dd.contains(e.target) && e.target !== toggleBtn) {
+        dd.classList.remove('tornei-selector__dropdown--open');
+      }
+    });
+  }
+
+  setupDropdown('tornei-toggle', 'tornei-dropdown');
+  setupDropdown('top5-toggle', 'top5-dropdown');
 
   // --- Load manifest ---
   fetch(MANIFEST_URL)
@@ -77,7 +95,8 @@
         return;
       }
       manifest.sort(function (a, b) { return b.date.localeCompare(a.date); });
-      buildDropdown(manifest);
+      buildDropdown(manifest, 'tornei-dropdown', function () { updateTorneiTable(manifest); });
+      buildDropdown(manifest, 'top5-dropdown', function () { updateTop5(manifest); }, 'radio');
       loadAllTornei(manifest);
     })
     .catch(function () {
@@ -114,8 +133,8 @@
 
   function onAllLoaded(manifest) {
     renderGeneralRanking();
-    renderTorneiDropdown(manifest);
     updateTorneiTable(manifest);
+    updateTop5(manifest);
   }
 
   // --- General Ranking ---
@@ -161,96 +180,127 @@
   }
 
   // --- Tornei Selector ---
-  function buildDropdown(manifest) {
-    var dd = document.getElementById('tornei-dropdown');
+  function buildDropdown(manifest, dropdownId, onChange, inputType) {
+    inputType = inputType || 'checkbox';
+    var dd = document.getElementById(dropdownId);
     dd.innerHTML = '';
     manifest.forEach(function (entry) {
       var label = document.createElement('label');
       label.className = 'tornei-selector__item';
-      var cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.value = entry.file;
-      cb.className = 'tornei-selector__checkbox';
-      cb.addEventListener('change', function () {
-        updateTorneiTable(manifest);
-      });
-      label.appendChild(cb);
+      var input = document.createElement('input');
+      input.type = inputType;
+      input.value = entry.file;
+      input.className = 'tornei-selector__checkbox';
+      if (inputType === 'radio') input.name = dropdownId;
+      input.addEventListener('change', onChange);
+      label.appendChild(input);
       label.appendChild(document.createTextNode(' ' + formatDate(entry.date)));
       dd.appendChild(label);
     });
   }
 
-  function renderTorneiDropdown(manifest) {
-    // already built in buildDropdown, no additional render needed
-  }
-
-  function getSelectedFiles() {
-    var cbs = document.querySelectorAll('.tornei-selector__checkbox:checked');
+  function getSelectedFiles(containerId) {
+    var container = document.getElementById(containerId);
+    var cbs = container.querySelectorAll('.tornei-selector__checkbox:checked');
     var files = [];
     cbs.forEach(function (cb) { files.push(cb.value); });
     return files;
   }
 
   function updateTorneiTable(manifest) {
-    var selected = getSelectedFiles();
+    var selected = getSelectedFiles('tornei-selector');
     var wrapper = document.getElementById('tornei-table-wrapper');
-    var emptyMsg = document.getElementById('tornei-empty-msg');
     var tbody = document.getElementById('tornei-standings-body');
-    var thead = document.querySelector('#tornei-standings thead');
 
-    // Always show the table wrapper so thead is visible
     wrapper.style.display = '';
     searchTornei.style.display = selected.length > 0 ? '' : 'none';
-
     searchTornei.value = '';
 
     if (selected.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5">Seleziona uno o più tornei per visualizzare la classifica.</td></tr>';
-      var torneoCol = document.querySelector('.torneo-col');
-      if (torneoCol) torneoCol.style.display = 'none';
+      tbody.innerHTML = '<tr><td colspan="3">Seleziona uno o più tornei per visualizzare la classifica.</td></tr>';
       return;
     }
 
-    var showTorneoCol = selected.length > 1;
-    var torneoCol = document.querySelector('.torneo-col');
-    if (torneoCol) torneoCol.style.display = showTorneoCol ? '' : 'none';
-
-    var html = '';
-    var pos = 0;
-    var topCount = 0;
+    var players = {};
 
     selected.forEach(function (file) {
       var data = allData[file];
       if (!data) return;
       var rows = data['TABELLONE FINALE'];
       if (!rows) return;
-
       rows.forEach(function (r) {
-        var posLabel = r['POSIZIONE'];
-        if (!posLabel) return;
-        pos++;
-        var g1 = r['Giocatore 1'] || '';
-        var g2 = r['Giocatore 2'] || '';
-        var score = r['Punteggio assegnato'] != null ? r['Punteggio assegnato'] : '';
-        var torneoName = showTorneoCol ? formatDate(getFileDate(file, manifest)) : '';
-        topCount++;
-        var cls = '';
-        if (topCount === 1) {
-          cls = ' class="is-champion"';
-        } else if (topCount <= 4) {
-          cls = ' class="is-top"';
-        }
-        html += '<tr' + cls + '>';
-        html += '<td>' + escapeHtml(posLabel) + '</td>';
-        html += '<td>' + escapeHtml(g1) + '</td>';
-        html += '<td>' + escapeHtml(g2) + '</td>';
-        html += '<td>' + escapeHtml(String(score)) + '</td>';
-        if (showTorneoCol) html += '<td>' + escapeHtml(torneoName) + '</td>';
-        html += '</tr>';
+        var score = r['Punteggio assegnato'];
+        if (score == null) return;
+        var g1 = r['Giocatore 1'];
+        var g2 = r['Giocatore 2'];
+        if (g1) players[g1] = (players[g1] || 0) + score;
+        if (g2) players[g2] = (players[g2] || 0) + score;
       });
     });
 
-    tbody.innerHTML = html || '<tr><td colspan="5">Nessun dato disponibile per i tornei selezionati.</td></tr>';
+    var sorted = Object.keys(players).sort(function (a, b) {
+      return players[b] - players[a];
+    });
+
+    if (sorted.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3">Nessun dato disponibile.</td></tr>';
+      return;
+    }
+
+    var html = '';
+    var topCount = 0;
+    sorted.forEach(function (name) {
+      topCount++;
+      var cls = '';
+      if (topCount === 1) {
+        cls = ' class="is-champion"';
+      } else if (topCount <= 4) {
+        cls = ' class="is-top"';
+      }
+      html += '<tr' + cls + '><td>' + topCount + '°</td><td>' + escapeHtml(name) + '</td><td>' + players[name] + '</td></tr>';
+    });
+
+    tbody.innerHTML = html;
+  }
+
+  // --- Top 4 per torneo ---
+  function updateTop5(manifest) {
+    var selected = getSelectedFiles('top5-selector');
+    var container = document.getElementById('top5-cards');
+    container.className = 'top5__cards';
+
+    if (selected.length === 0) {
+      container.innerHTML = '<p style="color:rgba(255,255,255,0.5);">Seleziona uno o più tornei per vedere le prime 5 squadre.</p>';
+      return;
+    }
+
+    var html = '';
+    selected.forEach(function (file) {
+      var data = allData[file];
+      if (!data) return;
+      var rows = data['TABELLONE FINALE'];
+      if (!rows) return;
+      var dateStr = formatDate(getFileDate(file, manifest));
+      var top5 = rows.slice(0, 4);
+      html += '<div class="top5-card">';
+      html += '<div class="top5-card__header">' + escapeHtml(dateStr) + '</div>';
+      html += '<table class="standings"><thead><tr><th>Posizione</th><th>Giocatore 1</th><th>Giocatore 2</th><th>Punteggio</th></tr></thead><tbody>';
+      var topCount = 0;
+      top5.forEach(function (r) {
+        topCount++;
+        var pos = r['POSIZIONE'] || topCount;
+        var g1 = r['Giocatore 1'] || '';
+        var g2 = r['Giocatore 2'] || '';
+        var score = r['Punteggio assegnato'] != null ? r['Punteggio assegnato'] : '';
+        var cls = '';
+        if (topCount === 1) cls = ' class="is-champion"';
+        else if (topCount <= 4) cls = ' class="is-top"';
+        html += '<tr' + cls + '><td>' + escapeHtml(String(pos)) + '</td><td>' + escapeHtml(g1) + '</td><td>' + escapeHtml(g2) + '</td><td>' + escapeHtml(String(score)) + '</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    });
+
+    container.innerHTML = html || '<p style="color:rgba(255,255,255,0.5);">Nessun dato disponibile.</p>';
   }
 
   // --- Helpers ---
@@ -272,7 +322,7 @@
   }
 
   function showTorneiError(msg) {
-    document.getElementById('tornei-standings-body').innerHTML = '<tr><td colspan="5">' + escapeHtml(msg) + '</td></tr>';
+    document.getElementById('tornei-standings-body').innerHTML = '<tr><td colspan="3">' + escapeHtml(msg) + '</td></tr>';
   }
 
   function escapeHtml(str) {
