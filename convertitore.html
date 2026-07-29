@@ -185,11 +185,15 @@
       <div class="gh-row">
         <div class="form-group">
           <label>Owner</label>
-          <input type="text" id="ghOwner" value="moobley" placeholder="moobley">
+          <input type="text" id="ghOwner" value="moobley">
         </div>
         <div class="form-group">
           <label>Repo</label>
-          <input type="text" id="ghRepo" value="afuerapadel_FE" placeholder="afuerapadel_FE">
+          <input type="text" id="ghRepo" value="afuerapadel_FE">
+        </div>
+        <div class="form-group">
+          <label>Branch</label>
+          <input type="text" id="ghBranch" value="main">
         </div>
         <div class="form-group" style="flex:2">
           <label>Token GitHub <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:#00a1b3;font-size:0.8rem">(crealo qui)</a></label>
@@ -229,6 +233,7 @@
     const githubCard = document.getElementById('githubCard');
     const ghOwner = document.getElementById('ghOwner');
     const ghRepo = document.getElementById('ghRepo');
+    const ghBranch = document.getElementById('ghBranch');
     const ghToken = document.getElementById('ghToken');
     const ghStatus = document.getElementById('ghStatus');
 
@@ -398,6 +403,7 @@
     async function publishToGitHub() {
       const owner = ghOwner.value.trim() || 'moobley';
       const repo = ghRepo.value.trim() || 'afuerapadel_FE';
+      const branch = ghBranch.value.trim() || 'main';
       const token = ghToken.value.trim();
 
       if (!token) {
@@ -419,29 +425,39 @@
           'Content-Type': 'application/json',
         };
 
-        setStatus('loading', `Creazione di ${fileName}...`);
+        const apiRoot = `https://api.github.com/repos/${owner}/${repo}`;
 
-        const createRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
-          method: 'PUT',
-          headers,
-          body: JSON.stringify({
-            message: `Aggiunto torneo del ${torneoDate}`,
-            content,
-            branch: 'main',
-          }),
+        setStatus('loading', `${fileName}: verifico se esiste già...`);
+
+        let fileSha = null;
+        const getRes = await fetch(`${apiRoot}/contents/${filePath}?ref=${branch}`, { headers });
+        if (getRes.ok) {
+          const existing = await getRes.json();
+          fileSha = existing.sha;
+        } else if (getRes.status !== 404) {
+          const err = await getRes.json();
+          throw new Error(`Errore leggendo ${fileName}: ${err.message}`);
+        }
+
+        setStatus('loading', fileSha ? `Aggiornamento di ${fileName}...` : `Creazione di ${fileName}...`);
+
+        const body = { message: `Aggiunto torneo del ${torneoDate}`, content, branch };
+        if (fileSha) body.sha = fileSha;
+
+        const upsertRes = await fetch(`${apiRoot}/contents/${filePath}`, {
+          method: 'PUT', headers,
+          body: JSON.stringify(body),
         });
 
-        if (!createRes.ok) {
-          const err = await createRes.json();
-          throw new Error(err.message || `Errore ${createRes.status}`);
+        if (!upsertRes.ok) {
+          const err = await upsertRes.json();
+          throw new Error(err.message || `Errore ${upsertRes.status}`);
         }
 
         setStatus('loading', 'Aggiornamento di manifest.json...');
 
         const manifestPath = 'assets/tornei_json/manifest.json';
-        const getManifestRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${manifestPath}`, {
-          headers,
-        });
+        const getManifestRes = await fetch(`${apiRoot}/contents/${manifestPath}?ref=${branch}`, { headers });
 
         if (!getManifestRes.ok) {
           throw new Error('Impossibile leggere manifest.json');
@@ -457,14 +473,13 @@
 
         const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(manifest, null, 2) + '\n')));
 
-        const updateRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${manifestPath}`, {
-          method: 'PUT',
-          headers,
+        const updateRes = await fetch(`${apiRoot}/contents/${manifestPath}`, {
+          method: 'PUT', headers,
           body: JSON.stringify({
             message: `Aggiunto torneo del ${torneoDate} al manifest`,
             content: updatedContent,
             sha: manifestData.sha,
-            branch: 'main',
+            branch,
           }),
         });
 
@@ -473,7 +488,7 @@
           throw new Error(err.message || `Errore ${updateRes.status}`);
         }
 
-        setStatus('success', `Pubblicato! 🎉\n\n${fileName} creato e manifest.json aggiornato.\nIl sito verrà aggiornato tra circa 1-2 minuti su GitHub Pages.`);
+        setStatus('success', `Pubblicato! 🎉\n\n${fileName} salvato e manifest.json aggiornato su branch "${branch}".\nIl sito si aggiorna tra circa 1-2 minuti.`);
 
       } catch (err) {
         setStatus('error', `Errore: ${err.message}`);
