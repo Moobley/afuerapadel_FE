@@ -115,6 +115,21 @@
     .status.error { background: #2e0d0d; border: 1px solid #da3633; color: #ff7b72; }
     .status.loading { background: #1a1d2e; border: 1px solid #444; color: #999; }
 
+    .delete-list {
+      list-style: none; margin: 12px 0; display: flex; flex-direction: column; gap: 8px;
+    }
+    .delete-list li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 14px; background: #1a1a1a; border-radius: 6px; border: 1px solid #333;
+      font-size: 0.9rem;
+    }
+    .delete-list li .date { color: #00a1b3; font-weight: 600; }
+    .delete-list li .del-btn {
+      background: #da3633; border: none; color: #fff; padding: 6px 14px;
+      border-radius: 6px; cursor: pointer; font-size: 0.85rem;
+    }
+    .delete-list li .del-btn:hover { background: #b62323; }
+
     .gh-field { margin-bottom: 12px; }
     .gh-field label { display: block; font-size: 0.85rem; color: #999; margin-bottom: 4px; }
     .gh-row { display: flex; gap: 12px; align-items: end; }
@@ -203,6 +218,22 @@
 
       <div id="ghStatus"></div>
     </div>
+
+    <div class="card hidden" id="deleteCard">
+      <h2>🗑️ Rimuovi un torneo</h2>
+      <p style="color:#999;margin-bottom:16px;font-size:0.9rem">
+        Seleziona un torneo dall'elenco per eliminarlo dal sito.
+      </p>
+      <div class="form-group">
+        <label>Torneo da rimuovere</label>
+        <select id="deleteSelect" style="margin-bottom:12px">
+          <option value="">— carica l'elenco —</option>
+        </select>
+      </div>
+      <button class="btn" id="loadDeleteBtn" style="margin-right:8px;background:#555">Carica elenco</button>
+      <button class="btn" id="deleteBtn" style="background:#da3633" disabled>Rimuovi</button>
+      <div id="deleteStatus"></div>
+    </div>
   </div>
 
   <script>
@@ -236,6 +267,11 @@
     const ghBranch = document.getElementById('ghBranch');
     const ghToken = document.getElementById('ghToken');
     const ghStatus = document.getElementById('ghStatus');
+    const deleteCard = document.getElementById('deleteCard');
+    const deleteSelect = document.getElementById('deleteSelect');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const loadDeleteBtn = document.getElementById('loadDeleteBtn');
+    const deleteStatus = document.getElementById('deleteStatus');
 
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
@@ -507,6 +543,132 @@
       if (ghToken.value) localStorage.setItem('gh_token', ghToken.value);
       else localStorage.removeItem('gh_token');
     });
+
+    ghToken.addEventListener('input', toggleDeleteCard);
+    ghOwner.addEventListener('input', toggleDeleteCard);
+    ghRepo.addEventListener('input', toggleDeleteCard);
+    ghBranch.addEventListener('input', toggleDeleteCard);
+
+    function toggleDeleteCard() {
+      if (ghToken.value.trim()) {
+        deleteCard.classList.remove('hidden');
+      } else {
+        deleteCard.classList.add('hidden');
+      }
+    }
+
+    loadDeleteBtn.addEventListener('click', loadTournamentList);
+
+    async function loadTournamentList() {
+      const owner = ghOwner.value.trim() || 'moobley';
+      const repo = ghRepo.value.trim() || 'afuerapadel_FE';
+      const branch = ghBranch.value.trim() || 'main';
+      const token = ghToken.value.trim();
+
+      if (!token) { setDelStatus('error', 'Inserisci il token GitHub.'); return; }
+
+      setDelStatus('loading', 'Caricamento tornei...');
+
+      try {
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+        };
+        const apiRoot = `https://api.github.com/repos/${owner}/${repo}`;
+
+        const res = await fetch(`${apiRoot}/contents/assets/tornei_json/manifest.json?ref=${branch}`, { headers });
+        if (!res.ok) throw new Error('Impossibile leggere manifest.json');
+
+        const data = await res.json();
+        const content = decodeURIComponent(escape(atob(data.content)));
+        const manifest = JSON.parse(content);
+
+        deleteSelect.innerHTML = '<option value="">— seleziona torneo —</option>';
+        manifest.forEach(t => {
+          const label = `${t.date} — ${t.file}`;
+          deleteSelect.innerHTML += `<option value="${t.file}|${t.date}">${label}</option>`;
+        });
+
+        deleteBtn.disabled = false;
+        deleteBtn.onclick = () => deleteTournament(manifest, data.sha);
+        setDelStatus('success', `${manifest.length} tornei trovati.`);
+      } catch (err) {
+        setDelStatus('error', `Errore: ${err.message}`);
+      }
+    }
+
+    async function deleteTournament(manifest, manifestSha) {
+      const val = deleteSelect.value;
+      if (!val) { setDelStatus('error', 'Seleziona un torneo.'); return; }
+
+      const [fileName, dateStr] = val.split('|');
+      const owner = ghOwner.value.trim() || 'moobley';
+      const repo = ghRepo.value.trim() || 'afuerapadel_FE';
+      const branch = ghBranch.value.trim() || 'main';
+      const token = ghToken.value.trim();
+
+      if (!confirm(`Eliminare ${fileName} (${dateStr})?`)) return;
+
+      setDelStatus('loading', `Eliminazione di ${fileName}...`);
+
+      try {
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        };
+        const apiRoot = `https://api.github.com/repos/${owner}/${repo}`;
+
+        const filePath = `assets/tornei_json/${fileName}`;
+        const getRes = await fetch(`${apiRoot}/contents/${filePath}?ref=${branch}`, { headers });
+        if (!getRes.ok) throw new Error('File torneo non trovato');
+        const fileData = await getRes.json();
+
+        const delRes = await fetch(`${apiRoot}/contents/${filePath}`, {
+          method: 'DELETE', headers,
+          body: JSON.stringify({
+            message: `Rimosso torneo del ${dateStr}`,
+            sha: fileData.sha,
+            branch,
+          }),
+        });
+        if (!delRes.ok) {
+          const err = await delRes.json();
+          throw new Error(err.message || `Errore ${delRes.status}`);
+        }
+
+        setDelStatus('loading', 'Aggiornamento manifest.json...');
+
+        const updatedManifest = manifest.filter(e => e.file !== fileName);
+        const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(updatedManifest, null, 2) + '\n')));
+
+        const updateRes = await fetch(`${apiRoot}/contents/assets/tornei_json/manifest.json`, {
+          method: 'PUT', headers,
+          body: JSON.stringify({
+            message: `Rimosso torneo del ${dateStr} dal manifest`,
+            content: updatedContent,
+            sha: manifestSha,
+            branch,
+          }),
+        });
+        if (!updateRes.ok) {
+          const err = await updateRes.json();
+          throw new Error(err.message || `Errore ${updateRes.status}`);
+        }
+
+        setDelStatus('success', `🗑️ ${fileName} rimosso e manifest.json aggiornato.`);
+        loadTournamentList();
+
+      } catch (err) {
+        setDelStatus('error', `Errore: ${err.message}`);
+      }
+    }
+
+    function setDelStatus(type, msg) {
+      deleteStatus.className = `status ${type}`;
+      deleteStatus.textContent = msg;
+      deleteStatus.classList.remove('hidden');
+    }
   </script>
 </body>
 </html>
