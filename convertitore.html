@@ -488,7 +488,7 @@
           throw new Error(err.message || `Errore ${updateRes.status}`);
         }
 
-        setStatus('success', `Pubblicato! 🎉\n\n${fileName} salvato e manifest.json aggiornato su branch "${branch}".\nIl sito si aggiorna tra circa 1-2 minuti.`);
+        setStatus('success', `Pubblicato! 🎉\n\n${fileName} salvato e manifest.json aggiornato.\n\nIl sito verrà aggiornato tra circa 1-2 minuti:\nhttps://moobley.github.io/afuerapadel_FE/`);
 
       } catch (err) {
         setStatus('error', `Errore: ${err.message}`);
