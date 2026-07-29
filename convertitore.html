@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convertitore Excel → JSON Tornei</title>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #1a1a1a; color: #e0e0e0; padding: 40px 20px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .container { max-width: 800px; width: 100%; }
+
+    h1 { font-size: 1.6rem; margin-bottom: 8px; }
+    p.desc { color: #999; margin-bottom: 32px; }
+
+    .card {
+      background: #252525; border-radius: 12px; padding: 28px;
+      margin-bottom: 20px; border: 1px solid #333;
+    }
+    .card h2 { font-size: 1.1rem; margin-bottom: 16px; color: #f55a22; }
+
+    .drop-zone {
+      border: 2px dashed #555; border-radius: 8px; padding: 40px;
+      text-align: center; cursor: pointer; transition: 0.2s;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #f55a22; background: rgba(245,90,34,0.05);
+    }
+    .drop-zone.has-file {
+      border-color: #00a1b3; background: rgba(0,161,179,0.05);
+    }
+    .drop-zone input[type="file"] { display: none; }
+    .drop-zone .icon { font-size: 2rem; margin-bottom: 8px; }
+    .drop-zone .filename { color: #00a1b3; font-weight: 600; margin-top: 8px; }
+
+    .form-row {
+      display: flex; gap: 16px; align-items: end; flex-wrap: wrap;
+    }
+    .form-group { flex: 1; min-width: 200px; }
+    .form-group label {
+      display: block; font-size: 0.85rem; color: #999; margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%; padding: 10px 12px; background: #1a1a1a; border: 1px solid #444;
+      border-radius: 6px; color: #fff; font-size: 0.95rem;
+    }
+    .form-group input:focus { border-color: #f55a22; outline: none; }
+
+    .col-mapping {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;
+    }
+    .col-mapping select {
+      width: 100%; padding: 8px 10px; background: #1a1a1a; border: 1px solid #444;
+      border-radius: 6px; color: #fff;
+    }
+
+    table.preview {
+      width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 12px;
+    }
+    table.preview th {
+      background: #333; padding: 8px 10px; text-align: left; font-weight: 600;
+    }
+    table.preview td {
+      padding: 6px 10px; border-bottom: 1px solid #333;
+    }
+
+    .btn {
+      padding: 12px 28px; border: none; border-radius: 8px; font-size: 1rem;
+      font-weight: 600; cursor: pointer; transition: 0.2s;
+      background: #f55a22; color: #fff; margin-top: 12px;
+    }
+    .btn:hover { background: #d44a12; }
+    .btn:disabled { background: #555; cursor: not-allowed; }
+
+    .btn-gh {
+      background: #238636; margin-left: 8px;
+    }
+    .btn-gh:hover { background: #1a6b2b; }
+    .btn-gh:disabled { background: #1a4a1a; }
+
+    .output {
+      background: #111; border-radius: 8px; padding: 16px;
+      font-family: 'Courier New', monospace; font-size: 0.8rem;
+      white-space: pre-wrap; word-break: break-all; max-height: 300px;
+      overflow: auto; margin-top: 12px;
+    }
+
+    .manifest-entry {
+      background: #0d1f1a; border: 1px solid #00a1b3; border-radius: 8px;
+      padding: 16px; margin-top: 16px;
+    }
+    .manifest-entry code {
+      display: block; background: #111; padding: 12px; border-radius: 6px;
+      margin-top: 8px; font-family: 'Courier New', monospace; font-size: 0.85rem;
+    }
+    .manifest-entry .btn-small {
+      margin-top: 8px; padding: 6px 16px; font-size: 0.85rem; border: none;
+      border-radius: 6px; cursor: pointer; background: #00a1b3; color: #fff;
+    }
+
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+    .badge.ok { background: #00a1b3; color: #fff; }
+    .badge.warn { background: #f55a22; color: #fff; }
+
+    .hidden { display: none; }
+
+    .status {
+      padding: 12px 16px; border-radius: 8px; margin-top: 12px; font-size: 0.9rem;
+    }
+    .status.success { background: #0d2e1a; border: 1px solid #238636; color: #7ee787; }
+    .status.error { background: #2e0d0d; border: 1px solid #da3633; color: #ff7b72; }
+    .status.loading { background: #1a1d2e; border: 1px solid #444; color: #999; }
+
+    .gh-field { margin-bottom: 12px; }
+    .gh-field label { display: block; font-size: 0.85rem; color: #999; margin-bottom: 4px; }
+    .gh-row { display: flex; gap: 12px; align-items: end; }
+    .gh-row .form-group { min-width: 140px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Convertitore Excel → JSON Tornei</h1>
+    <p class="desc">Carica il file Excel della classifica e pubblicalo direttamente su GitHub.</p>
+
+    <div class="card">
+      <h2>1. Carica il file Excel</h2>
+      <div class="drop-zone" id="dropZone">
+        <div class="icon">📄</div>
+        <p>Clicca o trascina qui il file Excel (.xlsx, .xls)</p>
+        <input type="file" id="fileInput" accept=".xlsx,.xls">
+        <div class="filename hidden" id="fileName"></div>
+      </div>
+    </div>
+
+    <div class="card hidden" id="configCard">
+      <h2>2. Configurazione</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Data del torneo</label>
+          <input type="date" id="torneoDate">
+        </div>
+        <div class="form-group">
+          <label>Foglio Excel</label>
+          <select id="sheetSelect"></select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:12px">
+        <label>Corrispondenza colonne</label>
+        <div class="col-mapping" id="colMapping"></div>
+      </div>
+    </div>
+
+    <div class="card hidden" id="previewCard">
+      <h2>3. Anteprima dati</h2>
+      <div id="stats"></div>
+      <div style="overflow-x:auto"><table class="preview" id="previewTable"></table></div>
+    </div>
+
+    <div class="card hidden" id="outputCard">
+      <h2>4. JSON generato</h2>
+      <div class="output" id="jsonOutput"></div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="downloadBtn">Scarica JSON</button>
+        <button class="btn btn-gh hidden" id="publishBtn">Pubblica su GitHub</button>
+      </div>
+
+      <div class="manifest-entry">
+        <strong>Riga da aggiungere a <code>manifest.json</code>:</strong>
+        <code id="manifestEntry"></code>
+        <button class="btn-small" id="copyManifestBtn">Copia</button>
+      </div>
+    </div>
+
+    <div class="card hidden" id="githubCard">
+      <h2>🔄 Pubblica su GitHub</h2>
+      <p style="color:#999;margin-bottom:16px;font-size:0.9rem">
+        Il file JSON verrà caricato e <code>manifest.json</code> aggiornato automaticamente.
+      </p>
+
+      <div class="gh-row">
+        <div class="form-group">
+          <label>Owner</label>
+          <input type="text" id="ghOwner" value="moobley" placeholder="moobley">
+        </div>
+        <div class="form-group">
+          <label>Repo</label>
+          <input type="text" id="ghRepo" value="afuerapadel_FE" placeholder="afuerapadel_FE">
+        </div>
+        <div class="form-group" style="flex:2">
+          <label>Token GitHub <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:#00a1b3;font-size:0.8rem">(crealo qui)</a></label>
+          <input type="password" id="ghToken" placeholder="github_pat_..." autocomplete="off">
+        </div>
+      </div>
+
+      <div id="ghStatus"></div>
+    </div>
+  </div>
+
+  <script>
+    const COLUMNS = ['POSIZIONE', 'Giocatore 1', 'Giocatore 2', 'Punteggio assegnato'];
+    let workbook = null;
+    let parsedData = null;
+    let columnMap = {};
+    let torneoDate = '';
+    let generatedJson = '';
+    let generatedFileName = '';
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    const configCard = document.getElementById('configCard');
+    const sheetSelect = document.getElementById('sheetSelect');
+    const colMapping = document.getElementById('colMapping');
+    const previewCard = document.getElementById('previewCard');
+    const previewTable = document.getElementById('previewTable');
+    const stats = document.getElementById('stats');
+    const outputCard = document.getElementById('outputCard');
+    const jsonOutput = document.getElementById('jsonOutput');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const publishBtn = document.getElementById('publishBtn');
+    const torneoDateInput = document.getElementById('torneoDate');
+    const manifestEntry = document.getElementById('manifestEntry');
+    const copyManifestBtn = document.getElementById('copyManifestBtn');
+    const githubCard = document.getElementById('githubCard');
+    const ghOwner = document.getElementById('ghOwner');
+    const ghRepo = document.getElementById('ghRepo');
+    const ghToken = document.getElementById('ghToken');
+    const ghStatus = document.getElementById('ghStatus');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault(); dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) handleFile(fileInput.files[0]);
+    });
+
+    function handleFile(file) {
+      if (!file.name.match(/\.xlsx?$/i)) {
+        alert('Il file deve essere .xlsx o .xls');
+        return;
+      }
+      fileName.textContent = '📄 ' + file.name;
+      fileName.classList.remove('hidden');
+      dropZone.classList.add('has-file');
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          workbook = XLSX.read(e.target.result, { type: 'array' });
+          populateSheets();
+          configCard.classList.remove('hidden');
+          previewCard.classList.add('hidden');
+          outputCard.classList.add('hidden');
+          githubCard.classList.add('hidden');
+        } catch (err) {
+          alert('Errore nella lettura del file: ' + err.message);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function populateSheets() {
+      sheetSelect.innerHTML = workbook.SheetNames.map(n => `<option value="${n}">${n}</option>`).join('');
+      sheetSelect.onchange = () => parseSheet();
+      parseSheet();
+    }
+
+    function parseSheet() {
+      const name = sheetSelect.value;
+      const sheet = workbook.Sheets[name];
+      const data = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+      if (!data.length) {
+        alert('Il foglio selezionato è vuoto.');
+        return;
+      }
+
+      const headers = Object.keys(data[0]);
+      columnMap = {};
+
+      headers.forEach(h => {
+        const hc = h.trim().toLowerCase();
+        let match = null;
+        if (hc.includes('posiz') || hc === 'posizione') match = 'POSIZIONE';
+        else if (hc === 'giocatore 1' || hc === 'giocatore1' || hc === 'giocatore_1' || hc.match(/^giocatore\s*1$/i)) match = 'Giocatore 1';
+        else if (hc === 'giocatore 2' || hc === 'giocatore2' || hc === 'giocatore_2' || hc.match(/^giocatore\s*2$/i)) match = 'Giocatore 2';
+        else if (hc.includes('puntegg') || hc === 'punteggio' || hc.includes('punti')) match = 'Punteggio assegnato';
+        if (match) columnMap[match] = h;
+      });
+
+      colMapping.innerHTML = COLUMNS.map(col => {
+        const auto = columnMap[col] || '';
+        return `<div>
+          <label>${col}</label>
+          <select id="map_${col}" data-col="${col}">
+            <option value="">— seleziona —</option>
+            ${headers.map(h => `<option value="${h}" ${h === auto ? 'selected' : ''}>${h}</option>`).join('')}
+          </select>
+        </div>`;
+      }).join('');
+
+      colMapping.querySelectorAll('select').forEach(sel => {
+        sel.onchange = () => {
+          columnMap[sel.dataset.col] = sel.value || null;
+          updatePreview(data);
+        };
+      });
+
+      updatePreview(data);
+    }
+
+    function updatePreview(data) {
+      const cols = COLUMNS.map(c => ({ name: c, src: columnMap[c] }));
+      const visibleCols = cols.filter(c => c.src);
+      const hasAll = visibleCols.length === 4;
+
+      const rows = data.slice(0, 10);
+      previewTable.innerHTML = `
+        <thead><tr>${visibleCols.map(c => `<th>${c.name}</th>`).join('')}</tr></thead>
+        <tbody>${rows.map(r => `<tr>${visibleCols.map(c => `<td>${r[c.src] ?? ''}</td>`).join('')}</tr>`).join('')}</tbody>
+      `;
+
+      stats.innerHTML = `
+        <p style="margin-bottom:8px">
+          <span class="badge ${hasAll ? 'ok' : 'warn'}">${hasAll ? 'Tutte le colonne mappate' : 'Mancano: ' + COLUMNS.filter(c => !columnMap[c]).join(', ')}</span>
+          &nbsp;·&nbsp; ${data.length} righe trovate
+        </p>
+      `;
+
+      previewCard.classList.remove('hidden');
+      outputCard.classList.add('hidden');
+      githubCard.classList.add('hidden');
+      parsedData = data;
+    }
+
+    torneoDateInput.addEventListener('change', () => {
+      torneoDate = torneoDateInput.value;
+      if (parsedData && COLUMNS.every(c => columnMap[c])) generateJson();
+    });
+
+    document.addEventListener('change', () => {
+      if (torneoDate && parsedData && COLUMNS.every(c => columnMap[c])) generateJson();
+    });
+
+    function generateJson() {
+      const data = parsedData;
+      const rows = data.map(r => {
+        const row = {};
+        COLUMNS.forEach(col => {
+          let val = r[columnMap[col]];
+          if (col === 'Punteggio assegnato') val = Number(val) || 0;
+          else val = String(val).trim().toUpperCase();
+          row[col] = val;
+        });
+        return row;
+      });
+
+      generatedJson = JSON.stringify({ "TABELLONE FINALE": rows }, null, 2);
+      jsonOutput.textContent = generatedJson;
+
+      const dateStr = torneoDate.replace(/-/g, '_');
+      generatedFileName = `RISULTATO_TORNEO_${dateStr}.json`;
+      const dateIso = torneoDate;
+
+      manifestEntry.innerHTML = `{ "file": "${generatedFileName}", "date": "${dateIso}" }`;
+
+      downloadBtn.onclick = () => {
+        const blob = new Blob([generatedJson], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = generatedFileName; a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      outputCard.classList.remove('hidden');
+      publishBtn.classList.remove('hidden');
+      githubCard.classList.remove('hidden');
+    }
+
+    copyManifestBtn.addEventListener('click', () => {
+      const text = manifestEntry.textContent.trim();
+      navigator.clipboard.writeText(text).then(() => {
+        copyManifestBtn.textContent = 'Copiato!';
+        setTimeout(() => { copyManifestBtn.textContent = 'Copia'; }, 2000);
+      });
+    });
+
+    publishBtn.addEventListener('click', publishToGitHub);
+
+    async function publishToGitHub() {
+      const owner = ghOwner.value.trim() || 'moobley';
+      const repo = ghRepo.value.trim() || 'afuerapadel_FE';
+      const token = ghToken.value.trim();
+
+      if (!token) {
+        setStatus('error', 'Inserisci il token GitHub.');
+        return;
+      }
+
+      setStatus('loading', 'Caricamento in corso...');
+
+      try {
+        const dateStr = torneoDate.replace(/-/g, '_');
+        const fileName = `RISULTATO_TORNEO_${dateStr}.json`;
+        const filePath = `assets/tornei_json/${fileName}`;
+        const content = btoa(unescape(encodeURIComponent(generatedJson)));
+
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        };
+
+        setStatus('loading', `Creazione di ${fileName}...`);
+
+        const createRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({
+            message: `Aggiunto torneo del ${torneoDate}`,
+            content,
+            branch: 'main',
+          }),
+        });
+
+        if (!createRes.ok) {
+          const err = await createRes.json();
+          throw new Error(err.message || `Errore ${createRes.status}`);
+        }
+
+        setStatus('loading', 'Aggiornamento di manifest.json...');
+
+        const manifestPath = 'assets/tornei_json/manifest.json';
+        const getManifestRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${manifestPath}`, {
+          headers,
+        });
+
+        if (!getManifestRes.ok) {
+          throw new Error('Impossibile leggere manifest.json');
+        }
+
+        const manifestData = await getManifestRes.json();
+        const currentContent = decodeURIComponent(escape(atob(manifestData.content)));
+        let manifest = JSON.parse(currentContent);
+
+        manifest = manifest.filter(e => e.file !== fileName);
+        manifest.push({ file: fileName, date: torneoDate });
+        manifest.sort((a, b) => b.date.localeCompare(a.date));
+
+        const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(manifest, null, 2) + '\n')));
+
+        const updateRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${manifestPath}`, {
+          method: 'PUT',
+          headers,
+          body: JSON.stringify({
+            message: `Aggiunto torneo del ${torneoDate} al manifest`,
+            content: updatedContent,
+            sha: manifestData.sha,
+            branch: 'main',
+          }),
+        });
+
+        if (!updateRes.ok) {
+          const err = await updateRes.json();
+          throw new Error(err.message || `Errore ${updateRes.status}`);
+        }
+
+        setStatus('success', `Pubblicato! 🎉\n\n${fileName} creato e manifest.json aggiornato.\nIl sito verrà aggiornato tra circa 1-2 minuti su GitHub Pages.`);
+
+      } catch (err) {
+        setStatus('error', `Errore: ${err.message}`);
+      }
+    }
+
+    function setStatus(type, msg) {
+      ghStatus.className = `status ${type}`;
+      ghStatus.textContent = msg;
+      ghStatus.classList.remove('hidden');
+    }
+
+    const savedToken = localStorage.getItem('gh_token');
+    if (savedToken) ghToken.value = savedToken;
+    ghToken.addEventListener('input', () => {
+      if (ghToken.value) localStorage.setItem('gh_token', ghToken.value);
+      else localStorage.removeItem('gh_token');
+    });
+  </script>
+</body>
+</html>
