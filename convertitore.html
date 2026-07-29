@@ -191,12 +191,11 @@
       </div>
     </div>
 
-    <div class="card hidden" id="githubCard">
-      <h2>🔄 Pubblica su GitHub</h2>
+    <div class="card" id="githubCard">
+      <h2>🔑 Accesso GitHub</h2>
       <p style="color:#999;margin-bottom:16px;font-size:0.9rem">
-        Il file JSON verrà caricato e <code>manifest.json</code> aggiornato automaticamente.
+        Inserisci le credenziali per pubblicare o eliminare tornei. Il token si salva nel browser.
       </p>
-
       <div class="gh-row">
         <div class="form-group">
           <label>Owner</label>
@@ -211,12 +210,10 @@
           <input type="text" id="ghBranch" value="main">
         </div>
         <div class="form-group" style="flex:2">
-          <label>Token GitHub <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color:#00a1b3;font-size:0.8rem">(crealo qui)</a></label>
+          <label>Token GitHub</label>
           <input type="password" id="ghToken" placeholder="github_pat_..." autocomplete="off">
         </div>
       </div>
-
-      <div id="ghStatus"></div>
     </div>
 
     <div class="card hidden" id="deleteCard">
@@ -233,6 +230,10 @@
       <button class="btn" id="loadDeleteBtn" style="margin-right:8px;background:#555">Carica elenco</button>
       <button class="btn" id="deleteBtn" style="background:#da3633" disabled>Rimuovi</button>
       <div id="deleteStatus"></div>
+    </div>
+
+    <div class="card hidden" id="publishCard">
+      <div id="ghStatus"></div>
     </div>
   </div>
 
@@ -262,6 +263,7 @@
     const manifestEntry = document.getElementById('manifestEntry');
     const copyManifestBtn = document.getElementById('copyManifestBtn');
     const githubCard = document.getElementById('githubCard');
+    const publishCard = document.getElementById('publishCard');
     const ghOwner = document.getElementById('ghOwner');
     const ghRepo = document.getElementById('ghRepo');
     const ghBranch = document.getElementById('ghBranch');
@@ -301,7 +303,7 @@
           configCard.classList.remove('hidden');
           previewCard.classList.add('hidden');
           outputCard.classList.add('hidden');
-          githubCard.classList.add('hidden');
+          publishCard.classList.add('hidden');
         } catch (err) {
           alert('Errore nella lettura del file: ' + err.message);
         }
@@ -378,7 +380,7 @@
 
       previewCard.classList.remove('hidden');
       outputCard.classList.add('hidden');
-      githubCard.classList.add('hidden');
+      publishCard.classList.add('hidden');
       parsedData = data;
     }
 
@@ -423,7 +425,7 @@
 
       outputCard.classList.remove('hidden');
       publishBtn.classList.remove('hidden');
-      githubCard.classList.remove('hidden');
+      publishCard.classList.remove('hidden');
     }
 
     copyManifestBtn.addEventListener('click', () => {
