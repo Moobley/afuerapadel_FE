@@ -4,10 +4,6 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 @font-face {
   font-family: 'MyriadPro';
   src: url('assets/font/MyriadPro-Regular.woff2') format('woff2'),
@@ -35,8 +31,12 @@ html {
   font-display: swap;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: 'MyriadPro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Source Sans 3', 'MyriadPro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: #231F1E;
   color: #fff;
   line-height: 1.6;
