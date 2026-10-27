@@ -216,7 +216,7 @@
       </div>
     </div>
 
-    <div class="card hidden" id="deleteCard">
+    <div class="card" id="deleteCard">
       <h2>🗑️ Rimuovi un torneo</h2>
       <p style="color:#999;margin-bottom:16px;font-size:0.9rem">
         Seleziona un torneo dall'elenco per eliminarlo dal sito.
@@ -227,7 +227,8 @@
           <option value="">— carica l'elenco —</option>
         </select>
       </div>
-      <button class="btn" id="loadDeleteBtn" style="margin-right:8px;background:#555">Carica elenco</button>
+      <p id="deleteHint" style="color:#e3b341;margin-bottom:12px;font-size:0.85rem"></p>
+      <button class="btn" id="loadDeleteBtn" style="margin-right:8px;background:#555" disabled>Carica elenco</button>
       <button class="btn" id="deleteBtn" style="background:#da3633" disabled>Rimuovi</button>
       <div id="deleteStatus"></div>
     </div>
@@ -546,18 +547,20 @@
       else localStorage.removeItem('gh_token');
     });
 
-    ghToken.addEventListener('input', toggleDeleteCard);
-    ghOwner.addEventListener('input', toggleDeleteCard);
-    ghRepo.addEventListener('input', toggleDeleteCard);
-    ghBranch.addEventListener('input', toggleDeleteCard);
+    const deleteHint = document.getElementById('deleteHint');
+    let tournamentListLoaded = false;
 
-    function toggleDeleteCard() {
-      if (ghToken.value.trim()) {
-        deleteCard.classList.remove('hidden');
-      } else {
-        deleteCard.classList.add('hidden');
-      }
+    [ghToken, ghOwner, ghRepo, ghBranch].forEach(el => el.addEventListener('input', updateDeleteControls));
+
+    function updateDeleteControls() {
+      const missing = [['Owner', ghOwner], ['Repo', ghRepo], ['Branch', ghBranch], ['Token GitHub', ghToken]]
+        .filter(([, el]) => !el.value.trim())
+        .map(([name]) => name);
+      deleteHint.textContent = missing.length ? `Compila: ${missing.join(', ')}` : '';
+      loadDeleteBtn.disabled = missing.length > 0;
+      deleteBtn.disabled = missing.length > 0 || !tournamentListLoaded;
     }
+    updateDeleteControls();
 
     loadDeleteBtn.addEventListener('click', loadTournamentList);
 
@@ -591,7 +594,8 @@
           deleteSelect.innerHTML += `<option value="${t.file}|${t.date}">${label}</option>`;
         });
 
-        deleteBtn.disabled = false;
+        tournamentListLoaded = true;
+        updateDeleteControls();
         deleteBtn.onclick = () => deleteTournament(manifest, data.sha);
         setDelStatus('success', `${manifest.length} tornei trovati.`);
       } catch (err) {
